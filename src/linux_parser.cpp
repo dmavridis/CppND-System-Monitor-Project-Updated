@@ -216,6 +216,32 @@ string LinuxParser::Command(int pid) {
   return command;
 }
 
+// Read and return CPU utilization for a process
+vector<string> LinuxParser::CpuUtilization(int pid) { 
+  string line;
+  string value;
+  vector<string> cpu;
+
+  // getting the arguments 14, 15, 16, 17 and 22 from /proc/pid/stat
+  int cpu_idx = 1;
+  std::ifstream filestream(kProcDirectory+to_string(pid)+kStatFilename);
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      while (linestream >> value) {
+        if (cpu_idx >= 14 && cpu_idx <= 17)
+            cpu.emplace_back(value);
+        if (cpu_idx == 22){
+          cpu.emplace_back(value);
+          return cpu;
+        }
+        cpu_idx++;
+      }
+    }
+  }
+  return cpu;
+}
+
 // Read and return the memory used by a process
 string LinuxParser::Ram(int pid) { 
   string key;
@@ -292,7 +318,7 @@ long LinuxParser::UpTime(int pid) {
       while (linestream >> value){
         --arg;
         if (arg == 0){
-          uptime = stoi(value)/sysconf(_SC_CLK_TCK);
+          uptime = stoi(value); //sysconf(_SC_CLK_TCK);
           return uptime;
         }
       }

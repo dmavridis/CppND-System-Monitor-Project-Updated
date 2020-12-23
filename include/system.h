@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-
+#include <set>
 #include "process.h"
 #include "processor.h"
 
@@ -12,7 +12,7 @@
 class System {
  public:
   Processor& Cpu();                   // See src/system.cpp
-  std::vector<Process>& Processes();  // TODO: See src/system.cpp
+  std::vector<Process>& Processes();  // See src/system.cpp
   float MemoryUtilization();          // See src/system.cpp
   long UpTime();                      // See src/system.cpp
   int TotalProcesses();               // See src/system.cpp
@@ -20,11 +20,12 @@ class System {
   std::string Kernel();               // See src/system.cpp
   std::string OperatingSystem();      // See src/system.cpp
 
-  // TODO: Define any necessary private members
+  // Define any necessary private members
+
  private:
   Processor cpu_ = {};
   std::vector<Process> processes_ = {};
-
+  std::set<int> pids_;
 };
 
 #endif
