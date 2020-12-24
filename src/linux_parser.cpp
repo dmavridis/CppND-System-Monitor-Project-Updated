@@ -108,11 +108,7 @@ long LinuxParser::UpTime() {
   return stoi(uptime);
 }
 
-<<<<<<< HEAD
-// Not used: Read and return the number of jiffies for the system
-=======
 // Read and return the number of jiffies for the system
->>>>>>> play
 long LinuxParser::Jiffies() { 
     return ActiveJiffies()+IdleJiffies(); 
 }
@@ -150,12 +146,8 @@ long LinuxParser::ActiveJiffies(int pid) {
   return utime + stime + cutime + cstime;
 }
 
-<<<<<<< HEAD
-// Not used: Read and return the number of active jiffies for the system
-=======
 // Read and return the number of active jiffies for the system
 // https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
->>>>>>> play
 long LinuxParser::ActiveJiffies() { 
   vector<string> cpu_ = CpuUtilization();
   unsigned long long int user = stoi(cpu_.at(0));
@@ -176,11 +168,7 @@ long LinuxParser::ActiveJiffies() {
   return active;
 }
 
-<<<<<<< HEAD
-// Not used: Read and return the number of idle jiffies for the system
-=======
 // Read and return the number of idle jiffies for the system
->>>>>>> play
 long LinuxParser::IdleJiffies() { 
   vector<string> cpu_ = CpuUtilization();
   unsigned long long idle = stoi(cpu_.at(3));
@@ -273,36 +261,6 @@ string LinuxParser::Command(int pid) {
   return command;
 }
 
-<<<<<<< HEAD
-// Read and return CPU utilization for a process
-vector<string> LinuxParser::CpuUtilization(int pid) { 
-  string line;
-  string value;
-  vector<string> cpu;
-
-  // getting the arguments 14, 15, 16, 17 and 22 from /proc/pid/stat
-  int cpu_idx = 1;
-  std::ifstream filestream(kProcDirectory+to_string(pid)+kStatFilename);
-  if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
-      while (linestream >> value) {
-        if (cpu_idx >= 14 && cpu_idx <= 17)
-            cpu.emplace_back(value);
-        if (cpu_idx == 22){
-          cpu.emplace_back(value);
-          return cpu;
-        }
-        cpu_idx++;
-      }
-    }
-  }
-  return cpu;
-}
-
-// Read and return the memory used by a process
-string LinuxParser::Ram(int pid) { 
-=======
 // Read and return the memory used by a process
 string LinuxParser::Ram(int pid) { 
   string key;
@@ -325,7 +283,6 @@ string LinuxParser::Ram(int pid) {
 
 // Read and return the user ID associated with a process
 string LinuxParser::Uid(int pid) { 
->>>>>>> play
   string key;
   string line;
   string value;
@@ -335,43 +292,6 @@ string LinuxParser::Uid(int pid) {
     while (std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
-      while (linestream >> key >> value){
-<<<<<<< HEAD
-        if (key == "vmSize")
-=======
-        if (key == "Uid")
->>>>>>> play
-          return value;
-      }
-    }
-  }
-  return value;
-}
-
-<<<<<<< HEAD
-// Read and return the user ID associated with a process
-string LinuxParser::Uid(int pid) { 
-  string key;
-  string line;
-  string value;
-
-  std::ifstream filestream(kProcDirectory + to_string(pid) + kStatusFilename);
-=======
-// Read and return the user associated with a process
-string LinuxParser::User(int pid) { 
-  string user;
-  string value;
-  string line;
-  string x;
-  string uid = Uid(pid);
-
-  std::ifstream filestream(kPasswordPath);
->>>>>>> play
-  if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::replace(line.begin(), line.end(), ':', ' ');
-      std::istringstream linestream(line);
-<<<<<<< HEAD
       while (linestream >> key >> value){
         if (key == "Uid")
           return value;
@@ -394,23 +314,6 @@ string LinuxParser::User(int pid) {
     while (std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
-      while (linestream >> user >> x >> value){
-        if (value == uid)
-          return user;
-      }
-    }
-  }
-  return user;
-}
-
-// Read and return the uptime of a process
-// Field 22 of the line
-long LinuxParser::UpTime(int pid) {
-  string line;
-  string value;
-  long int uptime;
-  int arg = 22;
-=======
       while (linestream >> user >> x >> value){
         if (value == uid)
           return user;
@@ -427,7 +330,6 @@ long LinuxParser::UpTime(int pid) {
   long int start_time;
   long int uptime;
   int arg = 22;  // field 22 of the line
->>>>>>> play
   std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
@@ -435,12 +337,8 @@ long LinuxParser::UpTime(int pid) {
       while (linestream >> value){
         --arg;
         if (arg == 0){
-<<<<<<< HEAD
-          uptime = stoi(value); //sysconf(_SC_CLK_TCK);
-=======
           start_time = stoi(value)/sysconf(_SC_CLK_TCK);
           uptime = UpTime() - start_time;
->>>>>>> play
           return uptime;
         }
       }

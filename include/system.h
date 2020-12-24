@@ -4,10 +4,6 @@
 #include <string>
 #include <vector>
 #include <set>
-<<<<<<< HEAD
-=======
-
->>>>>>> play
 #include "process.h"
 #include "processor.h"
 
@@ -29,14 +25,9 @@ class System {
  private:
   Processor cpu_ = {};
   std::vector<Process> processes_ = {};
-<<<<<<< HEAD
-  std::set<int> pids_;
-};
-=======
   std::vector<int> active_pids = {}; 
   std::set<int> active_set = {};
   bool b_ = false;
   };
->>>>>>> play
 
 #endif

@@ -25,17 +25,6 @@ Processor& System::Cpu() {
 vector<Process>& System::Processes() {
     auto active_pids = LinuxParser::Pids(); // Get all the running ids
 
-<<<<<<< HEAD
-// Return a container composed of the system's processes
-vector<Process>& System::Processes() { 
-    vector<int> pids = LinuxParser::Pids(); 
-    for (int p:pids){
-        Process process(p);
-        processes_.emplace_back(process);
-    }
-    std::sort(processes_.begin(), processes_.end()); 
-    return processes_;
-=======
     // update the set of ative processes
 //    active_set = std::union(std::set_intersection(active_set, active_pids), active_pids);
 
@@ -47,7 +36,6 @@ vector<Process>& System::Processes() {
     }
     std::sort(processes_.begin(), processes_.end());
     return processes_; 
->>>>>>> play
 }
 
 // Return the system's kernel identifier (string)
