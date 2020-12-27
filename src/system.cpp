@@ -15,7 +15,6 @@ using std::size_t;
 using std::string;
 using std::vector;
 
-
 // Return the system's CPU
 Processor& System::Cpu() { 
     return cpu_; 
@@ -23,19 +22,15 @@ Processor& System::Cpu() {
 
 // Return a container composed of the system's processes
 vector<Process>& System::Processes() {
-    auto active_pids = LinuxParser::Pids(); // Get all the running ids
+  const vector<int> processes_pids = LinuxParser::Pids();
+  processes_.clear();
+  for (int p:processes_pids) {
+    processes_.emplace_back(Process(p));
+  }
 
-    // update the set of ative processes
-//    active_set = std::union(std::set_intersection(active_set, active_pids), active_pids);
-
-    // scan the vector, delete old processes and add the new ones
-    if (!b_){
-        for (auto a:active_pids)
-            processes_.emplace_back(Process(a));
-        b_ = true;
-    }
-    std::sort(processes_.begin(), processes_.end());
-    return processes_; 
+  // Sort Processes based on each process' CPU utilization
+  std::sort(processes_.begin(), processes_.end());
+  return processes_;
 }
 
 // Return the system's kernel identifier (string)

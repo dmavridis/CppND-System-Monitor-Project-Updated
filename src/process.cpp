@@ -4,9 +4,6 @@
 #include <string>
 #include <vector>
 
-#include <random>
-
-
 #include "process.h"
 #include "linux_parser.h"
 
@@ -15,23 +12,27 @@ using std::to_string;
 using std::vector;
 using std::stol;
 
+Process::Process(int pid): pid_{pid} {
+    CpuUtilization_();
+}   
+
 // Return this process's ID
 int Process::Pid() { 
     return pid_; 
 }
 
-// Return this process's CPU utilization
 float Process::CpuUtilization() { 
-    // std::random_device rd;  //Will be used to obtain a seed for the random number engine
-    // std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    // std::uniform_real_distribution<> dis(0.0, 1.0);
-    // cpu_ = dis(gen);
-    cpu_ = LinuxParser::ActiveJiffies(Pid()); //LinuxParser::UpTime(Pid());
-    return cpu_;     
+    return cpu_;
+}
+
+void Process::CpuUtilization_() {
+  active_jiffies = LinuxParser::ActiveJiffies(Pid());
+  long total_jiffies = LinuxParser::Jiffies();
+  cpu_ = 1.0*(active_jiffies)/total_jiffies;
 }
 
 float Process::Compare() const {
-    return cpu_;     
+    return cpu_;
 }
 
 // Return the command that generated this process
@@ -56,5 +57,5 @@ long int Process::UpTime() {
 
 // Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const {
-    return Compare() < a.Compare(); 
+    return Compare() > a.Compare();
 }
